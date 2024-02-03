@@ -3,7 +3,7 @@
 // - press Ctrl/Cmd+shift+M switch to mobile mode
 
 // 2. confirm the id span element by classname has not been changed
-const spanElementClassName = '_ap3a _aaco _aacw _aacx _aad7 _aade' // DON'T ADD fullstop .
+const idSpanElementClassName = '_ap3a _aaco _aacw _aacx _aad7 _aade' // DON'T ADD fullstop .
 
 // 3. enter followerNum to match with followers or following number
 const followerNum = 0 // change this to the number of followers/following you have
@@ -32,7 +32,7 @@ const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 const getIdList = () => {
-  const idNodeList = document.getElementsByClassName(spanElementClassName)
+  const idNodeList = document.getElementsByClassName(idSpanElementClassName)
   let list = []
   for (const node of idNodeList) {
     const id = node.innerText
