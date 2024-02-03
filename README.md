@@ -16,3 +16,7 @@ A script to find the difference between followers and account you following.
 12. You will get the result printed in the console
 
 *The results are also saved in local storage with key `instachecker_history` (Under `Application` tab in Devtools)
+
+## Disclaimer
+The script is only for education and testing purpose. Please do not run without understanding the content.  
+[WARNING from META](https://www.facebook.com/selfxss)
