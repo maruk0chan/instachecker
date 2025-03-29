@@ -6,9 +6,20 @@
 const idSpanElementClassName = '_ap3a _aaco _aacw _aacx _aad7 _aade' // DON'T ADD fullstop .
 
 // 3. enter followerNum to match with followers or following number
-const followerNum = 0 // change this to the number of followers/following you have
-const followingNum = 0 // change this to the number of followers/following you have
-
+const isFollowersPage = window.location.pathname
+  .split('/')
+  .includes('followers')
+let followerNum = 0 // change this to the number of followers/following you have
+if (isFollowersPage) {
+  followerNum = Number(prompt('How many followers?'))
+}
+const isFollowingPage = window.location.pathname
+  .split('/')
+  .includes('following')
+let followingNum = 0 // change this to the number of followers/following you have
+if (isFollowingPage) {
+  followingNum = Number(prompt('How many following?'))
+}
 // get whether the page is follower or following
 const pageType = location.pathname
   .split('/')
@@ -18,7 +29,8 @@ let followNum = pageType === 'followers' ? followerNum : followingNum
 
 if (followNum === 0) {
   console.log(
-    'Please set the followerNum to the number of followers/following you have'
+    `Please check if you are on the correct followers / following page
+    or set the followerNum to the number of followers/following you have`
   )
 }
 const scrollToBottom = () => {
@@ -108,19 +120,34 @@ if (pageType === 'followers') {
   console.log('goneFollowers', goneFollowers)
   console.log('unFollowing', unFollowing)
 
-  // create localStorage object
-  localStorage.setItem(
-    'instachecker_history',
-    JSON.stringify({
-      ...existingHistory,
-      [today]: {
-        followers,
-        following,
-        followerNum,
-        followingNum,
-        accountIDontFollow,
-        accountNotFollowingMe,
-      },
-    })
-  )
+  // if no changes
+  if (
+    newFollowers.length === 0 &&
+    goneFollowers.length === 0 &&
+    newFollowing.length === 0 &&
+    unFollowing.length === 0
+  ) {
+    console.log('No changes and no log will be saved')
+  } else {
+    // create localStorage object
+    localStorage.setItem(
+      'instachecker_history',
+      JSON.stringify({
+        ...existingHistory,
+        [today]: {
+          followers,
+          following,
+          followerNum,
+          followingNum,
+          accountIDontFollow,
+          accountNotFollowingMe,
+          newFollowers,
+          newFollowing,
+          goneFollowers,
+          unFollowing,
+        },
+      })
+    )
+    console.log('Log has been saved')
+  }
 }
