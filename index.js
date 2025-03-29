@@ -81,18 +81,41 @@ if (pageType === 'followers') {
   const accountNotFollowingMe = arrayDifference(following, followers)
   console.log('Not following me: ', accountNotFollowingMe)
 
-  // save last run time
+  // ignore first run and ONLY save second run time
   const today = new Date().toISOString()
 
   const existingHistory = JSON.parse(
     localStorage.getItem('instachecker_history')
   )
 
+  // get last time run results
+  const lastTimeRunResults = Object.values(existingHistory).find((v, i) => {
+    if (Object.keys(existingHistory).length - 1 === i) {
+      return v
+    }
+  })
+  const lastTimeFollowers = lastTimeRunResults.followers ?? []
+  const lastTimeFollowing = lastTimeRunResults.following ?? []
+
+  // compare with past followers and following
+  const newFollowers = followers.filter((f) => !lastTimeFollowers.includes(f))
+  const goneFollowers = lastTimeFollowers.filter((f) => !followers.includes(f))
+  const newFollowing = following.filter((f) => !lastTimeFollowing.includes(f))
+  const unFollowing = lastTimeFollowing.filter((f) => !following.includes(f))
+
+  console.log('newFollowers', newFollowers)
+  console.log('newFollowing', newFollowing)
+  console.log('goneFollowers', goneFollowers)
+  console.log('unFollowing', unFollowing)
+
+  // create localStorage object
   localStorage.setItem(
     'instachecker_history',
     JSON.stringify({
       ...existingHistory,
       [today]: {
+        followers,
+        following,
         followerNum,
         followingNum,
         accountIDontFollow,
