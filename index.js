@@ -6,20 +6,9 @@
 const idSpanElementClassName = '_ap3a _aaco _aacw _aacx _aad7 _aade' // DON'T ADD fullstop .
 
 // 3. enter followerNum to match with followers or following number
-const isFollowersPage = window.location.pathname
-  .split('/')
-  .includes('followers')
-let followerNum = 0 // change this to the number of followers/following you have
-if (isFollowersPage) {
-  followerNum = Number(prompt('How many followers?'))
-}
-const isFollowingPage = window.location.pathname
-  .split('/')
-  .includes('following')
-let followingNum = 0 // change this to the number of followers/following you have
-if (isFollowingPage) {
-  followingNum = Number(prompt('How many following?'))
-}
+const followerNum = 0 // change this to the number of followers/following you have
+const followingNum = 0 // change this to the number of followers/following you have
+
 // get whether the page is follower or following
 const pageType = location.pathname
   .split('/')
