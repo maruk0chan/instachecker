@@ -9,17 +9,13 @@ let requestHeaders = {
 let follower_usernames = new Set()
 let user_id = '9299519515'
 let user_username = 'lun.lunan'
+let followerEndpoint = `https://www.instagram.com/api/v1/friendships/${user_id}/followers/?count=12&search_surface=follow_list_page`
 
 const fetchFollowers = (maxId) =>
-  fetch(
-    `https://www.instagram.com/api/v1/friendships/${user_id}/followers/?count=12${
-      maxId ? `&max_id=${maxId}` : ''
-    }&search_surface=follow_list_page`,
-    {
-      headers: requestHeaders,
-      referrer: `https://www.instagram.com/${user_username}/followers/`,
-    }
-  )
+  fetch(`${followerEndpoint}${maxId ? `&max_id=${maxId}` : ''}`, {
+    headers: requestHeaders,
+    referrer: `https://www.instagram.com/${user_username}/followers/`,
+  })
 
 async function fetchAllFollowers() {
   let nextMaxId
