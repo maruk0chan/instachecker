@@ -1,26 +1,13 @@
 let requestHeaders = {
-  "accept": "*/*",
-  "accept-language": "ja,en-US;q=0.9,en;q=0.8,zh-TW;q=0.7,zh;q=0.6",
-  "priority": "u=1, i",
-  "sec-ch-prefers-color-scheme": "dark",
-  "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
-  "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"143.0.7499.193\", \"Chromium\";v=\"143.0.7499.193\", \"Not A(Brand\";v=\"24.0.0.0\"",
-  "sec-ch-ua-mobile": "?0",
-  "sec-ch-ua-model": "\"\"",
-  "sec-ch-ua-platform": "\"macOS\"",
-  "sec-ch-ua-platform-version": "\"26.1.0\"",
-  "sec-fetch-dest": "empty",
-  "sec-fetch-mode": "cors",
-  "sec-fetch-site": "same-origin",
-  "x-asbd-id": "359341",
-  "x-csrftoken": "PiaAUpFKo1h7NQfdrgGceaJGzH8b9jZJ",
-  "x-ig-app-id": "936619743392459",
-  "x-ig-www-claim": "hmac.AR16vzo3NLi6b4blY4zkRabTxUczXUSwgjemC5O_m4lsTW_q",
-  "x-requested-with": "XMLHttpRequest",
-  "x-web-session-id": "sr544g:juzqbv:7ftux4"
+  'x-asbd-id': '359341',
+  'x-csrftoken': 'PiaAUpFKo1h7NQfdrgGceaJGzH8b9jZJ',
+  'x-ig-app-id': '936619743392459',
+  'x-ig-www-claim': 'hmac.AR16vzo3NLi6b4blY4zkRabTxUczXUSwgjemC5O_m4lsTW_q',
+  'x-requested-with': 'XMLHttpRequest',
+  'x-web-session-id': 'za65qk:juzqbv:1s4e7f',
 }
 let next_max_id = null
-let follower_usernames = []
+let follower_usernames = new Set()
 
 const firstFetch = () =>
   fetch(
@@ -54,28 +41,35 @@ firstFetch()
   })
   .then((json) => {
     next_max_id = json.next_max_id
-    follower_usernames = [
-      ...follower_usernames,
-      ...json.users.map((user) => user.username),
-    ]
+    json.users.forEach((user) => follower_usernames.add(user.username))
     console.log(json)
-    while
+    fetchAllFollowers(next_max_id)
   })
   .catch(console.error)
 
-nextFetch(next_max_id)
-  .then((res) => {
-    return res.json()
-  })
-  .then((json) => {
-    next_max_id = json.next_max_id
-    follower_usernames = [
-      ...follower_usernames,
-      ...json.users.map((user) => user.username),
-    ]
-    console.log(json)
-  })
-  .catch(console.error)
+// Helper function to loop fetching followers until next_max_id is undefined
+async function fetchAllFollowers(initial_next_max_id) {
+  let current_next_max_id = initial_next_max_id
+
+  while (typeof current_next_max_id !== 'undefined') {
+    try {
+      const res = await nextFetch(current_next_max_id)
+      const json = await res.json()
+      current_next_max_id = json.next_max_id
+      follower_usernames = [
+        ...follower_usernames,
+        ...json.users.map((user) => user.username),
+      ]
+      console.log(json)
+    } catch (error) {
+      console.error(error)
+      break
+    }
+  }
+}
+
+// Call after firstFetch resolves and next_max_id is set
+// Uncomment and place in correct context if needed
 
 const res = {
   users: [
