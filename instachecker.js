@@ -9,17 +9,19 @@ let requestHeaders = {
 let followers = new Set()
 let following = new Set()
 
-let user_id = '9299519515'
-let user_username = 'lun.lunan'
+// let user_id = '9299519515'
+// let user_username = 'lun.lunan'
+let my_user_id = '51949234'
+let my_user_username = 'don.marcoon'
 
 const fetchUsers = (type, maxId) =>
   fetch(
-    `https://www.instagram.com/api/v1/friendships/${user_id}/${type}/?count=12${
+    `https://www.instagram.com/api/v1/friendships/${my_user_id}/${type}/?count=12${
       maxId ? `&max_id=${maxId}` : ''
     }&search_surface=follow_list_page`,
     {
       headers: requestHeaders,
-      referrer: `https://www.instagram.com/${user_username}/${type}/`,
+      referrer: `https://www.instagram.com/${my_user_username}/${type}/`,
     }
   )
 
@@ -83,14 +85,19 @@ const existingHistory = JSON.parse(
 }
 
 // get last time run results
-const lastTimeRunResults = Object.values(existingHistory).find((v, i) => {
-  if (existingHistory.length === 0) return defaultHistory
-  if (Object.keys(existingHistory).length - 1 === i) {
-    return v
-  }
-}) ?? defaultHistory
-const lastTimeFollowers = Array.isArray(lastTimeRunResults.followers) ? lastTimeRunResults.followers : []
-const lastTimeFollowing = Array.isArray(lastTimeRunResults.following) ? lastTimeRunResults.following : []
+const lastTimeRunResults =
+  Object.values(existingHistory).find((v, i) => {
+    if (existingHistory.length === 0) return defaultHistory
+    if (Object.keys(existingHistory).length - 1 === i) {
+      return v
+    }
+  }) ?? defaultHistory
+const lastTimeFollowers = Array.isArray(lastTimeRunResults.followers)
+  ? lastTimeRunResults.followers
+  : []
+const lastTimeFollowing = Array.isArray(lastTimeRunResults.following)
+  ? lastTimeRunResults.following
+  : []
 
 // compare with past followers and following
 const lastTimeFollowersSet = new Set(lastTimeFollowers)
@@ -120,6 +127,8 @@ if (
     JSON.stringify({
       ...existingHistory,
       [today]: {
+        my_user_id,
+        my_user_username,
         followers,
         following,
         followerNum,
