@@ -10,10 +10,10 @@ let requestHeaders = {
 let followers = new Set()
 let following = new Set()
 
-// let my_user_id = '9299519515'
-// let my_user_username = 'lun.lunan'
-let my_user_id = '51949234'
-let my_user_username = 'don.marcoon'
+let my_user_id = '9299519515'
+let my_user_username = 'lun.lunan'
+// let my_user_id = '51949234'
+// let my_user_username = 'don.marcoon'
 
 const fetchUsers = async (type, maxId) =>
   fetch(
@@ -36,7 +36,7 @@ async function fetchAll(type, usernames) {
       if (!json.next_max_id) break
       nextMaxId = json.next_max_id
     } catch (error) {
-      console.error(error)
+      console.error(`Error fetching ${type} users:`, error)
       break
     }
   }
