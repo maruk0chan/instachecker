@@ -88,9 +88,9 @@ const lastTimeRunResults = Object.values(existingHistory).find((v, i) => {
   if (Object.keys(existingHistory).length - 1 === i) {
     return v
   }
-})
-const lastTimeFollowers = lastTimeRunResults.followers ?? []
-const lastTimeFollowing = lastTimeRunResults.following ?? []
+}) ?? defaultHistory
+const lastTimeFollowers = Array.isArray(lastTimeRunResults.followers) ? lastTimeRunResults.followers : []
+const lastTimeFollowing = Array.isArray(lastTimeRunResults.following) ? lastTimeRunResults.following : []
 
 // compare with past followers and following
 const lastTimeFollowersSet = new Set(lastTimeFollowers)
