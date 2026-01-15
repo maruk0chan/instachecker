@@ -1,0 +1,16 @@
+{
+  "name": "instachecker",
+  "version": "1.0.0",
+  "description": "## What is this? A script to find the difference between followers and account you following.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --noResolve --noCheck instachecker.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsc": "^2.0.4",
+    "typescript": "^5.9.3"
+  }
+}

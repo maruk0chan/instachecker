@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@atip/*": ["./copied-from-atip/*"],
+      "@@playwright/*": ["./playwright/*"]
+    },
+    "incremental": true,
+    "downlevelIteration": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "dist/types/**/*.ts",
+    "next.config.ts",
+    "playwright/**/*.ts",
+    "src/types",
+    "src/**/*.mdx"
+  ],
+  "exclude": ["node_modules"],
+  "allowArbitraryExtensions": true
+}
