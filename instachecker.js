@@ -15,10 +15,6 @@ const firstFetch = () =>
     {
       headers: requestHeaders,
       referrer: 'https://www.instagram.com/lun.lunan/followers/',
-      body: null,
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
     }
   )
 
@@ -28,10 +24,6 @@ const nextFetch = (next_max_id) =>
     {
       headers: requestHeaders,
       referrer: 'https://www.instagram.com/lun.lunan/followers/',
-      body: null,
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
     }
   )
 
