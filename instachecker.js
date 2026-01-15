@@ -6,8 +6,8 @@ let requestHeaders = {
   'x-requested-with': 'XMLHttpRequest',
   'x-web-session-id': 'za65qk:juzqbv:1s4e7f',
 }
-let follower_usernames = new Set()
-let following_usernames = new Set()
+let followers = new Set()
+let following = new Set()
 let user_id = '9299519515'
 let user_username = 'lun.lunan'
 
@@ -38,8 +38,8 @@ async function fetchAll(type, usernames) {
   }
 }
 
-await fetchAll('followers', follower_usernames)
-await fetchAll('following', following_usernames)
+fetchAll('followers', followers)
+await fetchAll('following', following)
 
 const arrayDifference = (arr1, arr2) => {
   // Create sets from the arrays to make comparisons easier
@@ -52,13 +52,80 @@ const arrayDifference = (arr1, arr2) => {
   return difference
 }
 
-const accountIDontFollow = arrayDifference(
-  follower_usernames,
-  following_usernames
-)
+const accountIDontFollow = arrayDifference(followers, following)
 console.log("I'm not following: ", accountIDontFollow)
-const accountNotFollowingMe = arrayDifference(
-  following_usernames,
-  follower_usernames
-)
+const accountNotFollowingMe = arrayDifference(following, followers)
 console.log('Not following me: ', accountNotFollowingMe)
+
+const today = new Date().toISOString()
+
+const defaultHistory = {
+  followers: [],
+  following: [],
+  followerNum: 0,
+  followingNum: 0,
+  accountIDontFollow: [],
+  accountNotFollowingMe: [],
+  newFollowers: [],
+  newFollowing: [],
+  goneFollowers: [],
+  unFollowing: [],
+}
+
+const existingHistory = JSON.parse(
+  localStorage.getItem('instachecker_history')
+) ?? {
+  [today]: defaultHistory,
+}
+
+// get last time run results
+const lastTimeRunResults = Object.values(existingHistory).find((v, i) => {
+  if (existingHistory.length === 0) return defaultHistory
+  if (Object.keys(existingHistory).length - 1 === i) {
+    return v
+  }
+})
+const lastTimeFollowers = lastTimeRunResults.followers ?? []
+const lastTimeFollowing = lastTimeRunResults.following ?? []
+
+// compare with past followers and following
+const newFollowers = followers.filter((f) => !lastTimeFollowers.includes(f))
+const goneFollowers = lastTimeFollowers.filter((f) => !followers.includes(f))
+const newFollowing = following.filter((f) => !lastTimeFollowing.includes(f))
+const unFollowing = lastTimeFollowing.filter((f) => !following.includes(f))
+
+console.log('newFollowers', newFollowers)
+console.log('newFollowing', newFollowing)
+console.log('goneFollowers', goneFollowers)
+console.log('unFollowing', unFollowing)
+
+// if no changes
+if (
+  newFollowers.length === 0 &&
+  goneFollowers.length === 0 &&
+  newFollowing.length === 0 &&
+  unFollowing.length === 0
+) {
+  console.log('No changes and no log will be saved')
+} else {
+  // create localStorage object
+  localStorage.setItem(
+    'instachecker_history',
+    JSON.stringify({
+      ...existingHistory,
+      [today]: {
+        followers,
+        following,
+        followerNum,
+        followingNum,
+        accountIDontFollow,
+        accountNotFollowingMe,
+        newFollowers,
+        newFollowing,
+        goneFollowers,
+        unFollowing,
+      },
+    })
+  )
+  console.log('Log has been saved')
+}
