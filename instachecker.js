@@ -8,6 +8,7 @@ let requestHeaders = {
 }
 let followers = new Set()
 let following = new Set()
+
 let user_id = '9299519515'
 let user_username = 'lun.lunan'
 
@@ -40,6 +41,9 @@ async function fetchAll(type, usernames) {
 
 fetchAll('followers', followers)
 await fetchAll('following', following)
+
+let followerNum = followers.size
+let followingNum = following.size
 
 const arrayDifference = (arr1, arr2) => {
   // Create sets from the arrays to make comparisons easier
@@ -89,10 +93,12 @@ const lastTimeFollowers = lastTimeRunResults.followers ?? []
 const lastTimeFollowing = lastTimeRunResults.following ?? []
 
 // compare with past followers and following
-const newFollowers = followers.filter((f) => !lastTimeFollowers.includes(f))
-const goneFollowers = lastTimeFollowers.filter((f) => !followers.includes(f))
-const newFollowing = following.filter((f) => !lastTimeFollowing.includes(f))
-const unFollowing = lastTimeFollowing.filter((f) => !following.includes(f))
+const lastTimeFollowersSet = new Set(lastTimeFollowers)
+const lastTimeFollowingSet = new Set(lastTimeFollowing)
+const newFollowers = [...followers].filter((f) => !lastTimeFollowersSet.has(f))
+const goneFollowers = lastTimeFollowers.filter((f) => !followers.has(f))
+const newFollowing = [...following].filter((f) => !lastTimeFollowingSet.has(f))
+const unFollowing = lastTimeFollowing.filter((f) => !following.has(f))
 
 console.log('newFollowers', newFollowers)
 console.log('newFollowing', newFollowing)
