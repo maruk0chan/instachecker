@@ -4,17 +4,18 @@ let requestHeaders = {
   'x-ig-app-id': '936619743392459',
   'x-ig-www-claim': 'hmac.AR16vzo3NLi6b4blY4zkRabTxUczXUSwgjemC5O_m4lsTW_q',
   'x-requested-with': 'XMLHttpRequest',
-  'x-web-session-id': 'za65qk:juzqbv:1s4e7f',
+  'x-web-session-id': '81x7mj:juzqbv:72fiiq',
 }
+
 let followers = new Set()
 let following = new Set()
 
-// let user_id = '9299519515'
-// let user_username = 'lun.lunan'
+// let my_user_id = '9299519515'
+// let my_user_username = 'lun.lunan'
 let my_user_id = '51949234'
 let my_user_username = 'don.marcoon'
 
-const fetchUsers = (type, maxId) =>
+const fetchUsers = async (type, maxId) =>
   fetch(
     `https://www.instagram.com/api/v1/friendships/${my_user_id}/${type}/?count=12${
       maxId ? `&max_id=${maxId}` : ''
@@ -92,20 +93,20 @@ const lastTimeRunResults =
       return v
     }
   }) ?? defaultHistory
-const lastTimeFollowers = Array.isArray(lastTimeRunResults.followers)
+const lastTimeFollowersArray = Array.isArray(lastTimeRunResults.followers)
   ? lastTimeRunResults.followers
   : []
-const lastTimeFollowing = Array.isArray(lastTimeRunResults.following)
+const lastTimeFollowingArray = Array.isArray(lastTimeRunResults.following)
   ? lastTimeRunResults.following
   : []
 
-// compare with past followers and following
-const lastTimeFollowersSet = new Set(lastTimeFollowers)
-const lastTimeFollowingSet = new Set(lastTimeFollowing)
-const newFollowers = [...followers].filter((f) => !lastTimeFollowersSet.has(f))
-const goneFollowers = lastTimeFollowers.filter((f) => !followers.has(f))
-const newFollowing = [...following].filter((f) => !lastTimeFollowingSet.has(f))
-const unFollowing = lastTimeFollowing.filter((f) => !following.has(f))
+// convert arrays from localStorage to Sets
+const lastTimeFollowers = new Set(lastTimeFollowersArray)
+const lastTimeFollowing = new Set(lastTimeFollowingArray)
+const newFollowers = [...followers].filter((f) => !lastTimeFollowers.has(f))
+const goneFollowers = [...lastTimeFollowers].filter((f) => !followers.has(f))
+const newFollowing = [...following].filter((f) => !lastTimeFollowing.has(f))
+const unFollowing = [...lastTimeFollowing].filter((f) => !following.has(f))
 
 console.log('newFollowers', newFollowers)
 console.log('newFollowing', newFollowing)
@@ -129,8 +130,8 @@ if (
       [today]: {
         my_user_id,
         my_user_username,
-        followers,
-        following,
+        followers: [...followers],
+        following: [...following],
         followerNum,
         followingNum,
         accountIDontFollow,
